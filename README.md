@@ -1,7 +1,7 @@
 # Fantasy Statblocks — Community Templates
 
 This is a **template registry** for the
-[Fantasy Statblocks](https://github.com/javalent/fantasy-statblocks) Obsidian
+[Fantasy Statblocks](https://github.com/Obsidian-TTRPG-Community/fantasy-statblocks) Obsidian
 plugin. It lets users browse and install statblock layouts for game systems
 beyond the built-in D&D 5e and Pathfinder 2e support — directly from the
 plugin's settings, via **Layouts → Browse Community Templates**.
@@ -63,7 +63,9 @@ When a user clicks **Install**, the plugin:
 | `description` | no       | One-line summary.                                                |
 | `tags`        | no       | Searchable keywords.                                             |
 | `example`     | no       | Path/URL to an in-note example. Strongly recommended.            |
-| `preview`     | no       | Path/URL to a preview image.                                     |
+| `preview`     | no       | Path/URL to a preview image (used as the gallery thumbnail).     |
+| `css`         | no       | Path/URL to a CSS snippet (or array of them). Installed into the vault's snippets folder and enabled automatically on install. May embed textures/logos/fonts as base64 data URIs. |
+| `requires`    | no       | Free-text requirements the plugin can't auto-install (e.g. fonts, companion plugins). Shown on the detail view. |
 | `homepage`    | no       | External docs/source link.                                       |
 
 Paths may be **relative to `index.json`** or **absolute `http(s)` URLs**.
