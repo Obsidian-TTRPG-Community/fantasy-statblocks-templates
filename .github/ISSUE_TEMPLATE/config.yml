@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Submit a template via pull request (advanced)
+    url: https://github.com/Obsidian-TTRPG-Community/fantasy-statblocks-templates/blob/main/README.md#contributing-a-template
+    about: Prefer git? Fork the repo, add your template files, and open a PR directly.

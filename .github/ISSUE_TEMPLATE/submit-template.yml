@@ -1,0 +1,97 @@
+name: Submit a statblock template
+description: Share a Fantasy Statblocks layout with the community. A maintainer reviews an automatically-opened pull request.
+title: "[Template] <name>"
+labels: ["template-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Fill this in and a pull request will be opened automatically for a maintainer to review.
+        You do **not** need to know git — just complete the fields below.
+  - type: input
+    id: name
+    attributes:
+      label: Template name
+      description: Display name, e.g. "Mörk Borg Creature".
+      placeholder: My Cool Statblock
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Game system
+      placeholder: Mörk Borg
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author / credit
+      placeholder: Your name or handle
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Short description
+      placeholder: One sentence describing what this layout renders.
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Comma-separated keywords for search/filter.
+      placeholder: osr, horror, minimal
+    validations:
+      required: false
+  - type: textarea
+    id: layout
+    attributes:
+      label: Layout JSON
+      description: In Obsidian, open Settings → Fantasy Statblocks → Layouts, click "Export as JSON" on your layout, and paste the contents here.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example note
+      description: A complete note (with a ```statblock code block using `layout:` your layout name) demonstrating the in-note format. Use your own, original creature.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: css
+    attributes:
+      label: CSS snippet (optional)
+      description: Paste a CSS snippet if your layout needs custom styling. Embed images/fonts as base64 data URIs to keep it self-contained. Do not use remote @import.
+      render: css
+    validations:
+      required: false
+  - type: textarea
+    id: requires
+    attributes:
+      label: Requirements (optional)
+      description: Anything users must install manually (fonts, companion plugins). One per line.
+      placeholder: |
+        Trajan Pro font (install at OS level)
+        Dice Roller plugin (optional)
+    validations:
+      required: false
+  - type: textarea
+    id: preview
+    attributes:
+      label: Preview image
+      description: Drag-and-drop a screenshot of the rendered statblock here (PNG/WebP, ideally ~16:10, under 250 KB). It will be committed alongside your template.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmations
+      options:
+        - label: This content is original / I have the right to share it (no copyrighted statblocks or fonts embedded).
+          required: true
+        - label: I understand layouts containing JavaScript blocks receive extra review and run code in users' vaults.
+          required: true

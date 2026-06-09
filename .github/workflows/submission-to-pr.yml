@@ -1,0 +1,61 @@
+name: Template submission to PR
+
+# When someone files a "Submit a statblock template" issue, parse the form,
+# build the template files, and open a pull request for a maintainer to review.
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  build:
+    # Only run for issues created from the submission form (it adds this label).
+    if: contains(join(github.event.issue.labels.*.name, ','), 'template-submission')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse issue form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/submit-template.yml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build template files
+        id: build
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/build-submission.mjs
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: submission/issue-${{ github.event.issue.number }}
+          base: main
+          title: "Template submission: ${{ steps.build.outputs.name }}"
+          body-path: .github/submission-pr-body.md
+          labels: template-submission
+          delete-branch: true
+          commit-message: "Add community template: ${{ steps.build.outputs.name }} (#${{ github.event.issue.number }})"
+
+      - name: Comment on the issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "⚠️ Automated processing of this submission failed. A maintainer will take a look — check the form fields (especially the Layout JSON) for errors."
+            })

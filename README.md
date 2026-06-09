@@ -70,7 +70,15 @@ When a user clicks **Install**, the plugin:
 
 Paths may be **relative to `index.json`** or **absolute `http(s)` URLs**.
 
-## Contributing a template
+## Submitting a template
+
+There are two ways to contribute:
+
+### Via the form (no git needed)
+
+Open a [**Submit a statblock template**](../../issues/new?template=submit-template.yml) issue and fill in the fields (name, system, layout JSON exported from the plugin, an example note, optional CSS, and a drag-and-dropped preview image). A pull request is opened automatically for a maintainer to review and merge.
+
+### Via a pull request (advanced)
 
 1. Build your layout in Obsidian (**Settings → Fantasy Statblocks → Layouts →
    Add New Layout**), then use **Export as JSON**.
