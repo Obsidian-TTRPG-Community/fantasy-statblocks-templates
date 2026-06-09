@@ -1,7 +1,9 @@
 name: Template submission to PR
 
-# When someone files a "Submit a statblock template" issue, parse the form,
-# build the template files, and open a pull request for a maintainer to review.
+# When a "Submit a statblock template" issue is filed, build the template files
+# and open a pull request for a maintainer to review. Uses only GitHub-owned
+# actions plus the preinstalled gh CLI (no third-party actions), so it runs
+# under a restrictive Actions allow-list.
 on:
   issues:
     types: [opened, edited]
@@ -13,49 +15,47 @@ permissions:
 
 jobs:
   build:
-    # Only run for issues created from the submission form (it adds this label).
-    if: contains(join(github.event.issue.labels.*.name, ','), 'template-submission')
+    # Issues created from the submission form get a "[Template] ..." title.
+    if: startsWith(github.event.issue.title, '[Template]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Parse issue form
-        id: parse
-        uses: stefanbuck/github-issue-parser@v3
-        with:
-          template-path: .github/ISSUE_TEMPLATE/submit-template.yml
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Build template files
+      - name: Build template files from the submission
         id: build
         env:
-          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ github.token }}
         run: node .github/scripts/build-submission.mjs
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: submission/issue-${{ github.event.issue.number }}
-          base: main
-          title: "Template submission: ${{ steps.build.outputs.name }}"
-          body-path: .github/submission-pr-body.md
-          labels: template-submission
-          delete-branch: true
-          commit-message: "Add community template: ${{ steps.build.outputs.name }} (#${{ github.event.issue.number }})"
+      - name: Commit and open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          NAME: ${{ steps.build.outputs.name }}
+          BRANCH: ${{ steps.build.outputs.branch }}
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Add community template: ${NAME} (#${ISSUE})"
+          git push -f origin "$BRANCH"
+          gh label create template-submission --color 0e8a16 --description "Community template submission" 2>/dev/null || true
+          gh pr create --base main --head "$BRANCH" \
+            --title "Template submission: ${NAME}" \
+            --body-file .github/submission-pr-body.md \
+            --label template-submission 2>/dev/null || \
+          gh pr create --base main --head "$BRANCH" \
+            --title "Template submission: ${NAME}" \
+            --body-file .github/submission-pr-body.md
 
-      - name: Comment on the issue
+      - name: Comment on the issue if it failed
         if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: "⚠️ Automated processing of this submission failed. A maintainer will take a look — check the form fields (especially the Layout JSON) for errors."
-            })
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE" --body "⚠️ Automated processing of this submission failed. A maintainer will take a look — check the form fields (especially the Layout JSON) for errors."

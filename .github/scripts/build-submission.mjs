@@ -1,15 +1,30 @@
-// Turns a parsed GitHub issue-form submission into template files + an index.json
-// entry, downloads the attached preview image, and writes a PR body. Run by the
-// "Template submission to PR" workflow. Node 20+ (global fetch).
+// Turns a GitHub issue-form submission into template files + an index.json
+// entry, downloads the attached preview image, and writes a PR body.
+// Parses the raw issue body (no third-party actions). Node 20+ (global fetch).
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const NONE = "_No response_";
-const clean = (v) => {
-    if (v === undefined || v === null) return "";
-    const s = String(v).trim();
-    return s === NONE ? "" : s;
-};
+
+/** Parse a GitHub issue-form body into { "<label>": "<value>" }. */
+function parseIssueBody(body) {
+    const sections = {};
+    const parts = body.split(/\r?\n### /);
+    for (let i = 0; i < parts.length; i++) {
+        let chunk = i === 0 ? parts[i].replace(/^### /, "") : parts[i];
+        const nl = chunk.indexOf("\n");
+        if (nl < 0) continue;
+        const label = chunk.slice(0, nl).trim();
+        let val = chunk.slice(nl + 1).trim();
+        // Strip a fenced code block (render: json/css/markdown fields). The
+        // opening fence may be 3+ backticks (longer when content nests ```).
+        const m = val.match(/^(`{3,})[^\n]*\n([\s\S]*?)\n\1\s*$/);
+        if (m) val = m[2];
+        sections[label] = val;
+    }
+    return sections;
+}
+
 const slugify = (s) =>
     s
         .toLowerCase()
@@ -19,11 +34,15 @@ const slugify = (s) =>
         .replace(/^-+|-+$/g, "") || "template";
 
 async function main() {
-    const data = JSON.parse(process.env.ISSUE_JSON || "{}");
+    const sections = parseIssueBody(process.env.ISSUE_BODY || "");
+    const get = (label) => {
+        const v = (sections[label] || "").trim();
+        return v === NONE ? "" : v;
+    };
     const issue = process.env.ISSUE_NUMBER || "";
     const token = process.env.GH_TOKEN || "";
 
-    const name = clean(data.name);
+    const name = get("Template name");
     if (!name) throw new Error("Submission is missing a template name.");
     const id = slugify(name);
     const dir = path.join("templates", id);
@@ -35,7 +54,7 @@ async function main() {
     // --- layout.json (required, must be valid) ---
     let layout;
     try {
-        layout = JSON.parse(clean(data.layout));
+        layout = JSON.parse(get("Layout JSON"));
     } catch (e) {
         throw new Error("Layout JSON did not parse. Paste the exact 'Export as JSON' output.");
     }
@@ -43,33 +62,30 @@ async function main() {
         throw new Error("Layout JSON must have a string `name` and an array `blocks`.");
     }
     await fs.writeFile(path.join(dir, "layout.json"), JSON.stringify(layout, null, 4) + "\n");
-
-    // Flag JavaScript blocks for extra maintainer scrutiny.
     if (JSON.stringify(layout).includes('"type":"javascript"')) {
         warnings.push("⚠️ Layout contains **JavaScript blocks** — review the code carefully; it executes in users' vaults.");
     }
 
     // --- example.md (required) ---
-    const example = clean(data.example);
+    const example = get("Example note");
     if (!example) throw new Error("An example note is required.");
     await fs.writeFile(path.join(dir, "example.md"), example.endsWith("\n") ? example : example + "\n");
 
-    // --- entry skeleton ---
     const entry = {
         id,
         name,
-        system: clean(data.system) || undefined,
-        author: clean(data.author) || undefined,
-        description: clean(data.description) || undefined,
-        tags: clean(data.tags)
-            ? clean(data.tags).split(",").map((t) => t.trim()).filter(Boolean)
+        system: get("Game system") || undefined,
+        author: get("Author / credit") || undefined,
+        description: get("Short description") || undefined,
+        tags: get("Tags")
+            ? get("Tags").split(",").map((t) => t.trim()).filter(Boolean)
             : undefined,
         layout: `${dir.replace(/\\/g, "/")}/layout.json`,
         example: `${dir.replace(/\\/g, "/")}/example.md`
     };
 
     // --- optional CSS ---
-    const css = clean(data.css);
+    const css = get("CSS snippet (optional)");
     if (css) {
         if (/@import\s+(url\()?["']?https?:/i.test(css)) {
             warnings.push("⚠️ CSS contains a remote `@import` — not allowed; please inline assets as base64.");
@@ -79,24 +95,20 @@ async function main() {
     }
 
     // --- optional requirements ---
-    const requires = clean(data.requires);
+    const requires = get("Requirements (optional)");
     if (requires) {
-        entry.requires = requires.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        entry.requires = requires.split(/\r?\n/).map((l) => l.replace(/^[-*]\s*/, "").trim()).filter(Boolean);
     }
 
-    // --- optional preview image (download the first attachment URL) ---
-    const preview = clean(data.preview);
+    // --- optional preview image ---
+    const preview = get("Preview image");
     const m = preview.match(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/) || preview.match(/(https?:\/\/\S+)/);
     if (m) {
         try {
-            const url = m[1];
-            const res = await fetch(url, {
-                headers: token ? { Authorization: `Bearer ${token}` } : {}
-            });
+            const res = await fetch(m[1], { headers: token ? { Authorization: `Bearer ${token}` } : {} });
             if (!res.ok) throw new Error(`status ${res.status}`);
             const buf = Buffer.from(await res.arrayBuffer());
-            const MAX = 400 * 1024;
-            if (buf.length > MAX) {
+            if (buf.length > 400 * 1024) {
                 warnings.push(`⚠️ Preview image is ${(buf.length / 1024).toFixed(0)} KB (over ~250 KB suggested).`);
             }
             await fs.writeFile(path.join(dir, "preview.png"), buf);
@@ -108,19 +120,18 @@ async function main() {
         notes.push("No preview image was provided — the gallery will show a placeholder tile.");
     }
 
-    // --- merge into index.json (replace same id, else append) ---
-    const idxPath = "index.json";
-    const idx = JSON.parse(await fs.readFile(idxPath, "utf8"));
+    // --- merge into index.json ---
+    const idx = JSON.parse(await fs.readFile("index.json", "utf8"));
     if (!Array.isArray(idx.templates)) idx.templates = [];
-    const existing = idx.templates.findIndex((t) => t.id === id);
     const compact = Object.fromEntries(Object.entries(entry).filter(([, v]) => v !== undefined));
+    const existing = idx.templates.findIndex((t) => t.id === id);
     if (existing >= 0) {
         idx.templates[existing] = compact;
         notes.push(`Replaced existing entry with id \`${id}\`.`);
     } else {
         idx.templates.push(compact);
     }
-    await fs.writeFile(idxPath, JSON.stringify(idx, null, 4) + "\n");
+    await fs.writeFile("index.json", JSON.stringify(idx, null, 4) + "\n");
 
     // --- PR body ---
     const body = [
@@ -145,11 +156,11 @@ async function main() {
     ].join("\n");
     await fs.writeFile(".github/submission-pr-body.md", body);
 
-    // outputs for the workflow
     const out = process.env.GITHUB_OUTPUT;
     if (out) {
         await fs.appendFile(out, `name=${name}\n`);
         await fs.appendFile(out, `id=${id}\n`);
+        await fs.appendFile(out, `branch=submission/issue-${issue}\n`);
     }
     console.log(`Prepared template "${name}" (${id}).`);
 }
