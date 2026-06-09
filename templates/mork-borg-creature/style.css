@@ -1,0 +1,29 @@
+/*
+ * Mörk Borg Creature — community CSS snippet.
+ * Installed automatically by Fantasy Statblocks "Browse Community Templates".
+ *
+ * NOTE: this demo styles all statblock containers for simplicity. A production
+ * template should scope its rules (e.g. behind a cssclass or a layout-specific
+ * wrapper) so it only affects its own layout. Assets such as textures, logos
+ * and glyph-fonts can be embedded directly here as base64 data: URIs to keep
+ * the snippet self-contained.
+ */
+.statblock-container {
+    background: #0b0b0b;
+    color: #f2e9d8;
+    border: 2px solid #d8c100;
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px #000 inset;
+    padding: 0.75rem 0.9rem;
+}
+.statblock-container .statblock-item-heading,
+.statblock-container .statblock-item-property-name,
+.statblock-container .statblock-item-section-heading {
+    color: #d8c100 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.statblock-container hr,
+.statblock-container .rule {
+    border-color: #d8c100;
+}
