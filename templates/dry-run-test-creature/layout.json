@@ -1,0 +1,21 @@
+{
+    "name": "Dry Run Test Creature",
+    "blocks": [
+        {
+            "type": "heading",
+            "id": "h1",
+            "properties": [
+                "name"
+            ],
+            "size": 1
+        },
+        {
+            "type": "property",
+            "id": "p1",
+            "properties": [
+                "hp"
+            ],
+            "display": "HP"
+        }
+    ]
+}

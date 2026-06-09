@@ -35,6 +35,18 @@
             ],
             "layout": "templates/mothership-monster/layout.json",
             "example": "templates/mothership-monster/example.md"
+        },
+        {
+            "id": "dry-run-test-creature",
+            "name": "Dry Run Test Creature",
+            "system": "Test TTRPG System",
+            "author": "automated dry-run (safe to close)",
+            "description": "Temporary test submission to validate the auto-PR workflow. Safe to close or delete.",
+            "tags": [
+                "test"
+            ],
+            "layout": "templates/dry-run-test-creature/layout.json",
+            "example": "templates/dry-run-test-creature/example.md"
         }
     ]
 }
