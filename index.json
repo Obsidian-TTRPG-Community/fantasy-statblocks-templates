@@ -5,10 +5,10 @@
     "templates": [
         {
             "id": "mork-borg-creature",
-            "name": "M\u00f6rk Borg Creature",
-            "system": "M\u00f6rk Borg",
+            "name": "Mörk Borg Creature",
+            "system": "Mörk Borg",
             "author": "Fantasy Statblocks Community",
-            "description": "A grim, minimal creature card for M\u00f6rk Borg and other OSR doom systems.",
+            "description": "A grim, minimal creature card for Mörk Borg and other OSR doom systems.",
             "tags": [
                 "osr",
                 "horror",
@@ -20,7 +20,8 @@
             "requires": [
                 "Optional: a grim display font installed at OS level for full effect.",
                 "Dice Roller plugin (optional) for inline rolls."
-            ]
+            ],
+            "preview": "templates/mork-borg-creature/preview.png"
         },
         {
             "id": "mothership-monster",
