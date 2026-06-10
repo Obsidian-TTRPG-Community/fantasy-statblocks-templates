@@ -66,9 +66,25 @@ When a user clicks **Install**, the plugin:
 | `preview`     | no       | Path/URL to a preview image (used as the gallery thumbnail).     |
 | `css`         | no       | Path/URL to a CSS snippet (or array of them). Installed into the vault's snippets folder and enabled automatically on install. May embed textures/logos/fonts as base64 data URIs. |
 | `requires`    | no       | Free-text requirements the plugin can't auto-install (e.g. fonts, companion plugins). Shown on the detail view. |
+| `downloads`   | no       | Fallback popularity number. Real per-template counts come automatically from jsDelivr CDN stats (see Popularity below); this is only used until/if stats are available. |
 | `homepage`    | no       | External docs/source link.                                       |
 
 Paths may be **relative to `index.json`** or **absolute `http(s)` URLs**.
+
+## Popularity (download counts)
+
+Template assets are served to the plugin through the [jsDelivr](https://www.jsdelivr.com/) CDN
+(`cdn.jsdelivr.net/gh/Obsidian-TTRPG-Community/fantasy-statblocks-templates@main/...`).
+jsDelivr publishes **per-file download statistics**, so the plugin can show how
+often each template is pulled and offer a **"Most popular"** sort — with no
+backend and nothing phoning home beyond the fetch the plugin already makes.
+
+Notes:
+- Stats are aggregate and lag by a day or so, and count CDN hits (including
+  caches/bots), so treat them as a relative popularity signal, not an exact
+  install ledger.
+- A maintainer-curated `downloads` value in `index.json` is used as a fallback
+  until real stats exist for a template.
 
 ## Submitting a template
 
