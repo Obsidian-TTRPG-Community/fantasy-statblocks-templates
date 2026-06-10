@@ -1,0 +1,144 @@
+/*
+ * SRD 2024 Statblock — community CSS theme.
+ *
+ * Re-themes ONLY the "SRD 2024 Statblock" layout. Fantasy Statblocks adds a
+ * slugified layout-name class to every rendered statblock container; the layout
+ * "SRD 2024 Statblock" becomes the class "srd-2024-statblock". Every rule is
+ * scoped to that class so it never touches other layouts.
+ *
+ * Palette/style mimics the 2024 Monster Manual / SRD 5.2 stat blocks:
+ * parchment panel, dark-red small-caps headings and labels, black body text,
+ * and a borderless three-group ability Mod/Save table with thin rules.
+ */
+.obsidian-statblock-plugin.srd-2024-statblock {
+    --statblock-background-color: #fdf1dc;
+    --statblock-font-color: #1a1a1a;
+    --statblock-primary-color: #58180d;
+    --statblock-rule-color: #58180d;
+    --statblock-border-color: #58180d;
+    --statblock-border-size: 1px;
+    --statblock-heading-font-color: #58180d;
+    --statblock-section-heading-font-color: #58180d;
+    --statblock-section-heading-border-color: #58180d;
+    /* Labels red, values near-black (set explicitly: themes override these). */
+    --statblock-property-name-font-color: #58180d;
+    --statblock-property-font-color: #1a1a1a;
+    --statblock-bar-color: #58180d;
+    font-family: "Bookmania", "Noto Serif", Georgia, "Times New Roman", serif;
+}
+
+/* Parchment panel with the signature top/bottom bars + thin side frame. */
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-content {
+    background-color: #fdf1dc !important;
+    color: #1a1a1a !important;
+    border: 1px solid #58180d;
+    border-top: 3px solid #58180d;
+    border-bottom: 3px solid #58180d;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+    padding: 0.6rem 0.8rem;
+}
+
+/* Kill any theme-applied row/header shading — the MM look is clean parchment. */
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-item-container,
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-item-inline,
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-item,
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-item-text,
+.obsidian-statblock-plugin.srd-2024-statblock .line {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Headings + rules. */
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-heading {
+    color: #58180d !important;
+    font-variant: small-caps;
+    letter-spacing: 0.02em;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-section-heading {
+    color: #58180d !important;
+    font-variant: small-caps;
+    border-bottom: 1px solid #58180d;
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .property-name,
+.obsidian-statblock-plugin.srd-2024-statblock .statblock-property-name {
+    color: #58180d !important;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .tapered-rule,
+.obsidian-statblock-plugin.srd-2024-statblock hr {
+    background: #58180d !important;
+    border-color: #58180d !important;
+}
+
+/* 2024 subtitle line: "Size Type (Subtype), Alignment". */
+.obsidian-statblock-plugin.srd-2024-statblock .line.type {
+    font-style: italic;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .line.type .property-name {
+    display: none;
+}
+
+/* 2024 ability Mod/Save table (built by the layout's JavaScript block).
+   Each ability's abbreviation + score share one cell (with a space) so they
+   can never collide; spacer columns separate the three groups. */
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 8px 0;
+    background: transparent !important;
+    border-top: 1px solid #58180d;
+    border-bottom: 1px solid #58180d;
+    font-size: 0.86em;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities thead,
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities thead tr,
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities tr,
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities th,
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-abilities td {
+    background: transparent !important;
+    border: none !important;
+    padding: 1px 2px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-h {
+    font-size: 0.6em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.55);
+    text-align: right;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-namescore {
+    text-align: left;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-name {
+    color: #58180d;
+    font-weight: 700;
+    font-variant: small-caps;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-score {
+    color: #1a1a1a;
+    font-weight: 700;
+}
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-mod,
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-save {
+    text-align: right;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+/* Empty spacer column between ability groups. */
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-gap {
+    padding: 0 !important;
+}
+/* Thin divider rule at the start of the 2nd and 3rd groups. */
+.obsidian-statblock-plugin.srd-2024-statblock .sb24-div {
+    border-left: 1px solid rgba(88, 24, 13, 0.3) !important;
+    padding-left: 6px !important;
+}
