@@ -37,6 +37,26 @@
             "layout": "templates/mothership-monster/layout.json",
             "example": "templates/mothership-monster/example.md",
             "downloads": 532
+        },
+        {
+            "id": "srd-2024-statblock",
+            "name": "SRD 2024 Statblock",
+            "system": "D&D 2024 (SRD 5.2)",
+            "author": "Josh Plunkett",
+            "description": "A faithful Dungeons & Dragons 2024 (SRD 5.2) creature layout — Initiative score, the ability Mod/Save grid, and 2024-style actions, spellcasting, and legendary & lair actions.",
+            "tags": [
+                "dnd",
+                "5e",
+                "2024",
+                "srd"
+            ],
+            "layout": "templates/srd-2024-statblock/layout.json",
+            "example": "templates/srd-2024-statblock/example.md",
+            "css": "templates/srd-2024-statblock/style.css",
+            "requires": [
+                "Dice Roller plugin (optional) — for inline dice in attacks/saves",
+                "Best viewed with the bundled CSS snippet (installed automatically on install)"
+            ]
         }
     ]
 }
