@@ -56,7 +56,8 @@
             "requires": [
                 "Dice Roller plugin (optional) — for inline dice in attacks/saves",
                 "Best viewed with the bundled CSS snippet (installed automatically on install)"
-            ]
+            ],
+            "preview": "templates/srd-2024-statblock/preview.png"
         }
     ]
 }
