@@ -1,12 +1,14 @@
-Automated pull request from #1.
+Automated pull request from #5.
 
-**Template:** Dry Run Test Creature (Test TTRPG System)
-**Author:** automated dry-run (safe to close)
-**Files:** `templates/dry-run-test-creature/`
+**Template:** SRD 2024 Statblock (D&D 2024 (SRD 5.2))
+**Author:** Josh Plunkett
+**Files:** `templates/srd-2024-statblock/`
 
-### No automated warnings
+### Needs attention
+- ⚠️ Layout contains **JavaScript blocks** — review the code carefully; it executes in users' vaults.
+- Could not download the preview image (status 404). A maintainer can add it.
 
-- No preview image was provided — the gallery will show a placeholder tile.
+
 
 ### Maintainer checklist
 - [ ] Layout renders correctly in Obsidian
@@ -15,4 +17,4 @@ Automated pull request from #1.
 - [ ] JavaScript blocks (if any) are safe
 - [ ] Preview image is appropriate and within size limits
 
-Closes #1
+Closes #5
