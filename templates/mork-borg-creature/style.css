@@ -1,29 +1,31 @@
 /*
  * Mörk Borg Creature — community CSS snippet.
- * Installed automatically by Fantasy Statblocks "Browse Community Templates".
  *
- * NOTE: this demo styles all statblock containers for simplicity. A production
- * template should scope its rules (e.g. behind a cssclass or a layout-specific
- * wrapper) so it only affects its own layout. Assets such as textures, logos
- * and glyph-fonts can be embedded directly here as base64 data: URIs to keep
- * the snippet self-contained.
+ * Re-themes ONLY the "Mörk Borg Creature" layout by overriding Fantasy
+ * Statblocks' theme CSS variables, scoped to the layout's auto-generated class.
+ *
+ * Fantasy Statblocks adds a slugified layout-name class to every rendered
+ * statblock container. "Mörk Borg Creature" -> "mrk-borg-creature"
+ * (spaces become "-"; non-alphanumerics, including the "ö", are stripped).
+ * Scoping to that class means this theme never touches other systems' blocks.
+ *
+ * Tip: assets (textures, logos, glyph-fonts) can be embedded as base64 data:
+ * URIs here to keep the snippet self-contained.
  */
-.statblock-container {
-    background: #0b0b0b;
-    color: #f2e9d8;
-    border: 2px solid #d8c100;
-    border-radius: 2px;
-    box-shadow: 0 0 0 2px #000 inset;
-    padding: 0.75rem 0.9rem;
-}
-.statblock-container .statblock-item-heading,
-.statblock-container .statblock-item-property-name,
-.statblock-container .statblock-item-section-heading {
-    color: #d8c100 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-.statblock-container hr,
-.statblock-container .rule {
-    border-color: #d8c100;
+.obsidian-statblock-plugin.mrk-borg-creature {
+    --statblock-background-color: #0b0b0b;
+    --statblock-font-color: #f2e9d8; /* body / property values */
+
+    --statblock-primary-color: #d8c100; /* accents + image border */
+    --statblock-rule-color: #d8c100;
+    --statblock-border-color: #d8c100;
+    --statblock-border-size: 2px;
+
+    --statblock-heading-font-color: #d8c100; /* creature name */
+    --statblock-section-heading-font-color: #d8c100; /* Actions / Special */
+    --statblock-property-name-font-color: #d8c100; /* HP / Morale / Armor */
+
+    --statblock-bar-color: #d8c100;
+    --statblock-bar-border-color: #000;
+    --statblock-box-shadow-color: #000;
 }
