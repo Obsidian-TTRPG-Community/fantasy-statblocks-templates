@@ -69,6 +69,9 @@ async function main() {
     // --- example.md (required) ---
     const example = get("Example note");
     if (!example) throw new Error("An example note is required.");
+    if (!/```statblock/.test(example)) {
+        warnings.push("⚠️ Example note has no ```statblock code fence — it won't render in the plugin. The fences may have been stripped in submission; ask the contributor to re-paste, or restore them manually.");
+    }
     await fs.writeFile(path.join(dir, "example.md"), example.endsWith("\n") ? example : example + "\n");
 
     const entry = {

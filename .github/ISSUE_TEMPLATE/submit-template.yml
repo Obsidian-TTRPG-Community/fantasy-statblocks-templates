@@ -57,8 +57,7 @@ body:
     id: example
     attributes:
       label: Example note
-      description: A complete note (with a ```statblock code block using `layout:` your layout name) demonstrating the in-note format. Use your own, original creature.
-      render: markdown
+      description: "A complete note demonstrating the in-note format. Paste the WHOLE note, including the ```statblock code fence (with `layout:` set to your layout name). Use your own, original creature. Note: this is a plain field (not a code box) on purpose, so the inner ```statblock fences are preserved."
     validations:
       required: true
   - type: textarea

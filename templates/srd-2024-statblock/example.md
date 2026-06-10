@@ -13,7 +13,7 @@ consolidated 2024-style actions, spellcasting, and legendary/lair actions.
 
 > Original creature and flavor text — not from any published book.
 
-
+```statblock
 layout: SRD 2024 Statblock
 name: Ancient Auric Wyrm
 size: Gargantuan
@@ -77,3 +77,4 @@ regional_effects:
     desc: "Opalescent mist drifts within 6 miles of the lair, warning non-evil creatures of nearby danger."
   - name: Liar's Revelation
     desc: "Within 6 miles, a creature attempting a deliberate lie makes a DC 15 Charisma save or blurts the truth instead."
+```
