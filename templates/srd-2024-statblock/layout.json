@@ -55,6 +55,9 @@
             "id": "defenses",
             "properties": [
                 "ac",
+                "initiative_modifier",
+                "initiativeModifier",
+                "modifier",
                 "initiative",
                 "hp",
                 "speed"
@@ -82,12 +85,15 @@
                             "type": "property",
                             "id": "initiative",
                             "properties": [
+                                "initiative_modifier",
+                                "initiativeModifier",
+                                "modifier",
                                 "initiative",
                                 "stats"
                             ],
                             "display": "Initiative",
                             "conditioned": true,
-                            "callback": "const s=monster.stats||[];const d=Number(s[1]);let m;if(monster.initiative!=null&&monster.initiative!==''){m=Number(monster.initiative);}else if(!isNaN(d)){m=Math.floor((d-10)/2);}else{return '';}const sc=10+m;return (m>=0?'+':'')+m+' ('+sc+')';"
+                            "callback": "const s=monster.stats||[];const d=Number(s[1]);const raw=monster.initiative_modifier??monster.initiativeModifier??monster.modifier??monster.initiative;let m;if(Array.isArray(raw)){const values=raw.map(Number).filter(Number.isFinite);if(values.length){m=values.reduce((sum,value)=>sum+value,0);}}else if(raw!=null&&raw!==''){const value=Number(raw);if(Number.isFinite(value)){m=value;}}if(m==null&&Number.isFinite(d)){m=Math.floor((d-10)/2);}if(m==null){return '';}const sc=10+m;return (m>=0?'+':'')+m+' ('+sc+')';"
                         }
                     ]
                 },
