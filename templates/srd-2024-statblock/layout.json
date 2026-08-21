@@ -75,7 +75,8 @@
                             "type": "property",
                             "id": "ac",
                             "properties": [
-                                "ac"
+                                "ac",
+                                "ac_class"
                             ],
                             "display": "AC",
                             "conditioned": true,
