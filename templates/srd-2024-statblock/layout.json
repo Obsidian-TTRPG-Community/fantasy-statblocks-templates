@@ -101,14 +101,13 @@
                     "type": "property",
                     "id": "hp",
                     "properties": [
-                        "hp",
-                        "hit_dice"
+                        "hp"
                     ],
                     "display": "HP",
                     "conditioned": true,
                     "dice": true,
                     "diceProperty": "hit_dice",
-                    "diceCallback": "const d=monster.hit_dice;return d&&String(d).trim()?[{text:String(d).trim()}]:[];",
+                    "diceCallback": "const d=monster.hit_dice;return d&&String(d).trim()?[{text:String(d).trim()}]:property;",
                     "callback": "const hp=monster.hp==null?'':String(monster.hp).trim();const dice=monster.hit_dice==null?'':String(monster.hit_dice).trim();return hp+(dice?' ('+dice+')':'');"
                 },
                 {
